@@ -1,6 +1,7 @@
 from app import app, db
 from app.models import Vacancies
 
+
 def insertVacancyData():
     Vacancies.query.delete()
     createVacancies('Cashier', 'Cashier Job Description', 'Talley Student Union', '9.25$ per hour', 15)
@@ -10,6 +11,7 @@ def insertVacancyData():
     createVacancies('Course Grader', 'Course Grader Job Description', 'Talley Student Union', '10.95$ per hour', 20)
     createVacancies('Cleaner', 'Fountain Dining', 'Bragaww Hall', '11.55$ per hour', 12)
     createVacancies('Sports Instructor', 'Sports Instructor Description', 'Talley Student Union', '12.75$ per hour', 16)
+
 
 def createVacancies(jobTitle, jobDescription, jobLocation, payRate, maxHoursAllowed):  # create new user
     newVacancy = Vacancies(jobTitle, jobDescription, jobLocation, payRate, maxHoursAllowed)

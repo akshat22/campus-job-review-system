@@ -14,10 +14,11 @@ def home():
     entries = Reviews.query.all()
     return render_template('index.html', entries=entries)
 
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-         return redirect(url_for('home'))
+        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -44,36 +45,43 @@ def login():
             flash('Login Unsuccessful. Please enter correct email and password.', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+
 @app.route("/logout")
 def logout():
     logout_user()
     flash('Logged out successfully!', 'success')
     return redirect(url_for('home'))
-    
+
+
 @app.route('/review/all')
 def view_reviews():
     """An API for the user to view all the reviews entered"""
     entries = Reviews.query.all()
     return render_template('view_reviews.html', entries=entries)
 
+
 @app.route('/review/new', methods=['GET', 'POST'])
 @login_required
 def new_review():
     form = ReviewForm()
     if form.validate_on_submit():
-        review = Reviews(job_title=form.job_title.data, job_description=form.job_description.data, department=form.department.data, locations=form.locations.data,
-                        hourly_pay=form.hourly_pay.data, benefits=form.benefits.data, review=form.review.data, rating=form.rating.data,
-                        recommendation=form.recommendation.data, author=current_user)
+        review = Reviews(job_title=form.job_title.data, job_description=form.job_description.data,
+                         department=form.department.data, locations=form.locations.data,
+                         hourly_pay=form.hourly_pay.data, benefits=form.benefits.data, review=form.review.data,
+                         rating=form.rating.data,
+                         recommendation=form.recommendation.data, author=current_user)
         db.session.add(review)
         db.session.commit()
         flash('Review submitted successfully!', 'success')
         return redirect(url_for('view_reviews'))
     return render_template('create_review.html', title='New Review', form=form, legend='Add your Review')
 
+
 @app.route("/review/<int:review_id>")
 def review(review_id):
     review = Reviews.query.get_or_404(review_id)
     return render_template('review.html', review=review)
+
 
 @app.route("/review/<int:review_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -83,29 +91,30 @@ def update_review(review_id):
         abort(403)
     form = ReviewForm()
     if form.validate_on_submit():
-        review.job_title=form.job_title.data
-        review.job_description=form.job_description.data
-        review.department=form.department.data
-        review.locations=form.locations.data
-        review.hourly_pay=form.hourly_pay.data
-        review.benefits=form.benefits.data
-        review.review=form.review.data
-        review.rating=form.rating.data
-        review.recommendation=form.recommendation.data
+        review.job_title = form.job_title.data
+        review.job_description = form.job_description.data
+        review.department = form.department.data
+        review.locations = form.locations.data
+        review.hourly_pay = form.hourly_pay.data
+        review.benefits = form.benefits.data
+        review.review = form.review.data
+        review.rating = form.rating.data
+        review.recommendation = form.recommendation.data
         db.session.commit()
         flash('Your review has been updated!', 'success')
         return redirect(url_for('view_reviews'))
     elif request.method == 'GET':
-        form.job_title.data=review.job_title
-        form.job_description.data=review.job_description
-        form.department.data=review.department
-        form.locations.data=review.locations
-        form.hourly_pay.data=review.hourly_pay
-        form.benefits.data=review.benefits
-        form.review.data=review.review
-        form.rating.data=review.rating
-        form.recommendation.data=review.recommendation
+        form.job_title.data = review.job_title
+        form.job_description.data = review.job_description
+        form.department.data = review.department
+        form.locations.data = review.locations
+        form.hourly_pay.data = review.hourly_pay
+        form.benefits.data = review.benefits
+        form.review.data = review.review
+        form.rating.data = review.rating
+        form.recommendation.data = review.recommendation
     return render_template('create_review.html', title='Update Review', form=form, legend='Update Review')
+
 
 @app.route("/review/<int:review_id>/delete", methods=['POST'])
 @login_required
@@ -118,6 +127,7 @@ def delete_review(review_id):
     flash('Your review has been deleted!', 'success')
     return redirect(url_for('view_reviews'))
 
+
 @app.route('/dashboard')
 def getVacantJobs():
     """
@@ -125,6 +135,7 @@ def getVacantJobs():
     """
     vacancies = Vacancies.query.all()
     return render_template('dashboard.html', vacancies=vacancies)
+
 
 @app.route('/pageContentPost', methods=['POST'])
 def page_content_post():
@@ -137,6 +148,7 @@ def page_content_post():
         else:
             entries = Reviews.query.filter_by(job_title=search_title)
         return render_template('view_reviews.html', entries=entries)
+
 
 @app.route("/account")
 @login_required
