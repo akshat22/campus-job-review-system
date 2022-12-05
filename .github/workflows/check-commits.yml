@@ -37,9 +37,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run code coverage
       run: |
-        coverage run crudapp.py
-        - name: Display coverage report
-          run: |
+#        coverage run crudapp.py
+#        - name: Display coverage report
+#          run: |
             coverage report
         - name: Get the xml output for coverage
           run: |
