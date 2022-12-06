@@ -14,7 +14,7 @@
 |Number of commits|3|[GitHub Link](https://github.com/akshat22/campus-job-review-system)|
 |Number of commits: by different people|3|[GitHub Link](https://github.com/akshat22/campus-job-review-system/pulse)|
 |Issues reports|3|[Issues](https://github.com/akshat22/campus-job-review-system/issues)|
-|DOI badge|3|[](https://zenodo.org/record/7398576#.Y46hsXZBy5c)|
+|DOI badge|3|[DOI](https://zenodo.org/record/7398576#.Y46hsXZBy5c)|
 |Docs: doco generated, format not ugly|3||
 |Docs: how: for common use cases X,Y,Z mini-tutorials showing worked examples on how to do X,Y,Z|3| In README.md|
 |Docs: why: docs tell a story, motivate the whole thing, deliver a punchline that makes you want to rush out and use the thing|3|In README.md|
