@@ -24,7 +24,7 @@
 |Test cases are routinely executed|3|[GitHub actions](https://github.com/akshat22/campus-job-review-system/actions)|
 |The files CONTRIBUTING.md lists coding standards and lots of tips on how to extend the system without screwing things up|3|[CONTRIBUTING.MD]()|
 |Issues are discussed before they are closed|3|[GitHub Link](https://github.com/akshat22/campus-job-review-system/issues?q=is%3Aissue+is%3Aclosed)|
-|Chat channel: exists|3|[Discord Server](https://drive.google.com/file/d/1hJyumk-VMGdoJKOBiQ9zA6T7Mkp2MPPC/view?usp=sharing) for group discussions|
+|Chat channel: exists|3|[WhatsApp Communication](https://drive.google.com/file/d/1hJyumk-VMGdoJKOBiQ9zA6T7Mkp2MPPC/view?usp=sharing) for group discussions|
 |Test cases: a large proportion of the issues related to handling failing cases|3|[GitHub Link](https://github.com/akshat22/campus-job-review-system/issues?q=is%3Aissue+is%3Aclosed)|
 |Evidence that the whole team is using the same tools: everyone can get to all tools and files|3||
 |Evidence that the whole team is using the same tools (e.g. config files in the repo, updated by lots of different people)|3|Multiple people working on files across the project. [Example](https://github.com/ashishjoshi2605/ncsu-campus-jobs-review-system/compare/main...akshat22:campus-job-review-system:feature/development_by_tilak) |
