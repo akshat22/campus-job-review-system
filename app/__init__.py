@@ -5,7 +5,6 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_socketio import SocketIO
-from app.routes import jobs_bp
 from apscheduler.schedulers.background import BackgroundScheduler
 from app.services.job_fetcher import fetch_job_listings
 
@@ -24,7 +23,6 @@ scheduler.start()
 app = Flask(__name__)
 socketio = SocketIO(app)
 app.config.from_object(Config)
-app.register_blueprint(jobs_bp)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
