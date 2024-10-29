@@ -6,6 +6,19 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_socketio import SocketIO
 from app.routes import jobs_bp
+from apscheduler.schedulers.background import BackgroundScheduler
+from app.services.job_fetcher import fetch_job_listings
+
+cached_jobs = []
+
+def refresh_job_data():
+    global cached_jobs
+    cached_jobs = fetch_job_listings()
+    socketio.emit('update_jobs', cached_jobs)
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(refresh_job_data, 'interval', minutes=10)
+scheduler.start()
 
 
 app = Flask(__name__)
