@@ -13,10 +13,12 @@ cached_jobs = []
 def refresh_job_data():
     global cached_jobs
     cached_jobs = fetch_job_listings()
+    print(cached_jobs)
     socketio.emit('update_jobs', cached_jobs)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(refresh_job_data, 'interval', minutes=10)
+scheduler.add_job(refresh_job_data, 'interval', minutes=2)
+print(scheduler)
 scheduler.start()
 
 

@@ -3,17 +3,13 @@
 
 <div class="container-fluid banner2 text-center">
     <p class="text-center bold">
-    <h1>Part Time Job Listings</h1>
+    <h1>Part-Time Job Listings</h1>
     </p>
     <div class="table-responsive justify-content-between">
         <table class="table table-striped table-bordered border border-white table-vcenter">
             <thead class="thead-dark">
             <tr>
                 <th scope="col">Job Title</th>
-                <th scope="col">Job Description</th>
-                <th scope="col">Job Location</th>
-                <th scope="col">Pay Rate</th>
-                <th scope="col">Maximum Working Hours Allowed</th>
                 <th scope="col">More Information</th>
             </tr>
             </thead>
@@ -27,22 +23,18 @@
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 <script>
     // Initialize SocketIO connection
-    const socket = io.connect('http://localhost:5000');  // Replace with your server's address if needed
+    const socket = io.connect('http://127.0.0.1:5000');  // Replace with your server's address if needed
 
     // Event listener for real-time job updates
     socket.on('update_jobs', (data) => {
         const jobListingsContainer = document.getElementById('job-listings');
-        jobListingsContainer.innerHTML = '';  // Clear the previous listings
+        jobListingsContainer.innerHTML = '';  // Clear previous listings
 
         data.forEach(vacancy => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><strong>${vacancy.jobTitle}</strong></td>
-                <td>${vacancy.jobDescription}</td>
-                <td>${vacancy.jobLocation}</td>
-                <td>${vacancy.jobPayRate}</td>
-                <td>${vacancy.maxHoursAllowed}</td>
-                <td><a href="https://campusenterprises.ncsu.edu/dept/hr/opportunities/student/" target="_blank">Click Here For More Information</a></td>
+                <td><strong>${vacancy.title}</strong></td>
+                <td><a href="${vacancy.link}" target="_blank">View Job Details</a></td>
             `;
             jobListingsContainer.appendChild(row);
         });
