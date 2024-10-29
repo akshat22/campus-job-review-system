@@ -5,6 +5,16 @@ from app.forms import RegistrationForm, LoginForm, ReviewForm
 from flask_login import login_user, current_user, logout_user, login_required
 
 app.config["SECRET_KEY"] = "5791628bb0b13ce0c676dfde280ba245"
+# app/routes/jobs.py
+from flask import Blueprint, jsonify
+from app.services.job_fetcher import fetch_job_listings
+
+jobs_bp = Blueprint('jobs', __name__)
+
+@jobs_bp.route('/api/jobs', methods=['GET'])
+def get_jobs():
+    job_listings = fetch_job_listings()
+    return jsonify(job_listings)
 
 
 @app.route("/")
