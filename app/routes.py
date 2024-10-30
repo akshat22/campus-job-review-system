@@ -157,17 +157,34 @@ def getVacantJobs():
     return render_template("dashboard.html", vacancies=vacancies)
 
 
-# @app.route('/pageContentPost', methods=['POST'])
-# def page_content_post():
-#     """An API for the user to view specific reviews depending on the job title"""
-#     if request.method == 'POST':
-#         form = request.form
-#         search_title = form.get('search')
-#         if search_title.strip() == '':
-#             entries = Reviews.query.all()
-#         else:
-#             entries = Reviews.query.filter_by(job_title=search_title)
-#         return render_template('view_reviews.html', entries=entries)
+@app.route('/pageContentPost', methods=['POST'])
+def page_content_post():
+    """An API for the user to view specific reviews depending on the job title, location, and rating range."""
+    if request.method == 'POST':
+        search_title = request.form.get('search_title')
+        search_location = request.form.get('search_location')
+        min_rating = request.form.get('min_rating', type=int)  # Default to 1 if not provided
+        max_rating = request.form.get('max_rating', type=int)  # Default to 5 if not provided
+
+        query = Reviews.query
+
+        # Filter by job title if provided
+        if search_title.strip():
+            query = query.filter(Reviews.job_title.ilike(f'%{search_title}%'))
+
+        # Filter by location if provided
+        if search_location.strip():
+            query = query.filter(Reviews.locations.ilike(f'%{search_location}%'))
+
+        # Filter by rating range if provided
+        if min_rating is not None and max_rating is not None:
+            query = query.filter(Reviews.rating.between(min_rating, max_rating))
+
+        entries = query.all()
+        return render_template('view_reviews.html', entries=entries)
+
+
+
 
 
 @app.route("/account")
