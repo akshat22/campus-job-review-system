@@ -25,6 +25,7 @@
                         
                         <hr class="survey-hr">
                         
+                        <!-- Job Title Input -->
                         {{ form.job_title.label(class="form-control-label") }}
                         {% if form.job_title.errors %}
                         {{ form.job_title(class="form-control form-control-lg is-invalid") }}
@@ -38,6 +39,7 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Department Input -->
                         {{ form.department.label(class="form-control-label") }}
                         {% if form.department.errors %}
                         {{ form.department(class="form-control form-control-lg is-invalid") }}
@@ -51,6 +53,7 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Location Input -->
                         {{ form.locations.label(class="form-control-label") }}
                         {% if form.locations.errors %}
                         {{ form.locations(class="form-control form-control-lg is-invalid") }}
@@ -64,6 +67,7 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Job Description Input -->
                         {{ form.job_description.label(class="form-control-label") }}
                         {% if form.job_description.errors %}
                         {{ form.job_description(class="form-control form-control-lg is-invalid") }}
@@ -77,6 +81,7 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Hourly Pay Input -->
                         {{ form.hourly_pay.label(class="form-control-label") }}
                         {% if form.hourly_pay.errors %}
                         {{ form.hourly_pay(class="form-control form-control-lg is-invalid") }}
@@ -90,6 +95,7 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Benefits Input -->
                         {{ form.benefits.label(class="form-control-label") }}
                         {% if form.benefits.errors %}
                         {{ form.benefits(class="form-control form-control-lg is-invalid") }}
@@ -103,21 +109,32 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Rating Stars with Context-Appropriate Labels -->
                         <label for="starRating" class="form-control-label">Rating</label><br>
-                        <div class="star-rating">
-                            <input type="radio" name="rating" value="1" id="1-star"><label for="1-star" class="star">★</label>
-                            <input type="radio" name="rating" value="2" id="2-star"><label for="2-star" class="star">★</label>
-                            <input type="radio" name="rating" value="3" id="3-star"><label for="3-star" class="star">★</label>
-                            <input type="radio" name="rating" value="4" id="4-star"><label for="4-star" class="star">★</label>
-                            <input type="radio" name="rating" value="5" id="5-star"><label for="5-star" class="star">★</label>
+                        <div class="rating-container">
+                            <span class="rating-label">Poor</span>
+                            <div class="star-rating">
+                                <input type="radio" name="rating" value="1" id="1-star"><label for="1-star" class="star">★</label>
+                                <input type="radio" name="rating" value="2" id="2-star"><label for="2-star" class="star">★</label>
+                                <input type="radio" name="rating" value="3" id="3-star"><label for="3-star" class="star">★</label>
+                                <input type="radio" name="rating" value="4" id="4-star"><label for="4-star" class="star">★</label>
+                                <input type="radio" name="rating" value="5" id="5-star"><label for="5-star" class="star">★</label>
+                            </div>
+                            <span class="rating-label">High</span>
                         </div>
                         <br><br>
                         
-                        <label for="recommendation" class="form-control-label">Recommendation (1 to 10)</label><br>
-                        <input type="range" name="recommendation" min="1" max="10" class="slider" id="recommendationSlider">
+                        <!-- Recommendation Slider with Enhanced Labels -->
+                        <label for="recommendation" class="form-control-label">Recommendation Level (1 to 10)</label><br>
+                        <div class="slider-container">
+                            <span class="slider-label">Do Not Recommend</span>
+                            <input type="range" name="recommendation" min="1" max="10" class="slider" id="recommendationSlider">
+                            <span class="slider-label">Highly Recommend</span>
+                        </div>
                         <span id="sliderValue">5</span>
                         <br><br>
                         
+                        <!-- Review Input -->
                         {{ form.review.label(class="form-control-label") }}
                         {% if form.review.errors %}
                         {{ form.review(class="form-control form-control-lg is-invalid") }}
@@ -131,6 +148,7 @@
                         {% endif %}
                         <br>
                         
+                        <!-- Submit Button -->
                         <div class="form-group">
                             {{ form.submit(class="btn btn-outline-info") }}
                         </div>

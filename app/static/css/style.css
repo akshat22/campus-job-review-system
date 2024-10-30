@@ -1,30 +1,53 @@
+/* General Styles */
 body {
-    background: url('overlay.png'), url('Wolfplaza.jpg');
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    color: black;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
 }
 
-.content-section {
-    background: #ffffff;
-    padding: 10px 20px;
-    border: 1px solid #dddddd;
-    border-radius: 3px;
+h1 {
+    text-align: center;
+    color: #333;
     margin-bottom: 20px;
 }
 
 .feedback {
-    width: 100%;
-    max-width: 780px;
-    background: #fff;
-    margin: 0 auto;
-    padding: 15px;
-    box-shadow: 1px 1px 16px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.survey-hr {
-    margin: 10px 0;
-    border: .5px solid #ddd;
+/* Form Control Label */
+.form-control-label {
+    font-weight: bold;
+    color: #555;
+}
+
+/* Rating Section */
+.rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+}
+
+.rating-label {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #888;
+    margin: 0 5px;
+}
+
+.rating-container .rating-label:first-child {
+    color: #b35656;
+}
+
+.rating-container .rating-label:last-child {
+    color: #b35656;
 }
 
 .star-rating {
@@ -34,29 +57,53 @@ body {
     margin-bottom: 10px;
 }
 
-.star-rating input {
-    display: none; /* Hide radio buttons */
+.star-rating .star {
+    font-size: 1.8em;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.star {
-    font-size: 30px; /* Size of stars */
-    color: lightgray; /* Default star color */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: color 0.3s; /* Smooth color transition */
+.star-rating input[type="radio"] {
+    display: none;
 }
 
-.star-rating input:checked ~ .star {
-    color: gold; /* Gold color for selected stars */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffcc00;
 }
 
-.star:hover,
-.star:hover ~ .star {
-    color: gold; /* Gold color on hover */
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffcc00;
+}
+
+/* Slider Section */
+.slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.slider-label {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #888;
+    margin: 0 10px;
+}
+
+.slider-container .slider-label:first-child {
+    color: #b35656;
+}
+
+.slider-container .slider-label:last-child {
+    color: #b35656;
 }
 
 .slider {
     width: 80%;
-    height: 12px;
+    appearance: none;
+    height: 8px;
+    border-radius: 5px;
     background: #ddd;
     outline: none;
     opacity: 0.7;
@@ -65,4 +112,50 @@ body {
 
 .slider:hover {
     opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #b35656;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: #b35656;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Slider Value Display */
+#sliderValue {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Submit Button */
+.btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-outline-info {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.btn-outline-info:hover {
+    background-color: #2980b9;
 }
