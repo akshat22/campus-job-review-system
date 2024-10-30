@@ -39,12 +39,7 @@ def insertVacancyData():
         "10.95$ per hour",
         20,
     )
-    createVacancies(
-        "Cleaner",
-        "Fountain Dining",
-        "Bragaww Hall",
-        "11.55$ per hour",
-        12)
+    createVacancies("Cleaner", "Fountain Dining", "Bragaww Hall", "11.55$ per hour", 12)
     createVacancies(
         "Sports Instructor",
         "Sports Instructor Description",
