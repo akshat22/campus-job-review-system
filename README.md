@@ -32,6 +32,8 @@ If this is not the case, then you need to download python installer package from
 
 You can refer [INSTALL.md](https://github.com/ashishjoshi2605/ncsu-campus-jobs-review-system/blob/main/INSTALL.md) for the complete installation steps based on your OS.
 
+## API Documentation
+You can view the API documentation for this project [here](docs/index.html).
 
 ## Demo Video
 https://user-images.githubusercontent.com/50794731/205819285-9d4875ed-172e-427c-9c0c-591957081a78.mp4
@@ -44,10 +46,9 @@ https://user-images.githubusercontent.com/50794731/205819285-9d4875ed-172e-427c-
 
 The rules listed below are to be followed by the ones who will be contributing to the code in the repository:
   
-  - All the branches used to merge any code into the main branch should start with "KAPSS-".
   - Atleast one review/approval is required from any other contributors of the project to merge a commit to the main branch.
   - It is recommended to delete the branch as soon as it is merged to the main branch to avoid stale branches in the repository.
-  - It is encouraged to add name tags such as "feature-" or "patch-" in the branches if it is used to add code-patches or features in the project.
+  - It is encouraged to add name tags such as "feature/" or "patch/" in the branches if it is used to add code-patches or features in the project.
   
 ### Code Coverage Screenshot
 
