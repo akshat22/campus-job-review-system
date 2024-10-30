@@ -1,15 +1,20 @@
+"""
+This module contains the database models for the application,
+including User, Reviews, and Vacancies.
+"""
+
 from app import db, login_manager
 from flask_login import UserMixin
 
 
 @login_manager.user_loader
 def load_user(user_id):
+    """Load a user from the database given their user ID."""
     return User.query.get(int(user_id))
 
 
 class Reviews(db.Model):
-    """Model which stores the information of the reviews submitted"""
-
+    """Model representing a review submitted by a user."""
     id = db.Column(db.Integer, primary_key=True)
     department = db.Column(db.String(64), index=True, nullable=False)
     locations = db.Column(db.String(120), index=True, nullable=False)
@@ -24,26 +29,27 @@ class Reviews(db.Model):
 
 
 class Vacancies(db.Model):
-    """Model which stores the information of the reviews submitted"""
-
-    vacancyId = db.Column(db.Integer, primary_key=True)
-    jobTitle = db.Column(db.String(500), index=True, nullable=False)
-    jobDescription = db.Column(db.String(1000), index=True, nullable=False)
-    jobLocation = db.Column(db.String(500), index=True, nullable=False)
-    jobPayRate = db.Column(db.String(120), index=True, nullable=False)
-    maxHoursAllowed = db.Column(db.Integer, nullable=False)
+    """Model representing a job vacancy."""
+    vacancy_id = db.Column(db.Integer, primary_key=True)
+    job_title = db.Column(db.String(500), index=True, nullable=False)
+    job_description = db.Column(db.String(1000), index=True, nullable=False)
+    job_location = db.Column(db.String(500), index=True, nullable=False)
+    job_pay_rate = db.Column(db.String(120), index=True, nullable=False)
+    max_hours_allowed = db.Column(db.Integer, nullable=False)
 
     def __init__(
-        self, jobTitle, jobDescription, jobLocation, jobPayRate, maxHoursAllowed
+        self, job_title, job_description, job_location, job_pay_rate, max_hours_allowed
     ):
-        self.jobTitle = jobTitle
-        self.jobDescription = jobDescription
-        self.jobLocation = jobLocation
-        self.jobPayRate = jobPayRate
-        self.maxHoursAllowed = maxHoursAllowed
+        """Initialize a Vacancy instance."""
+        self.job_title = job_title
+        self.job_description = job_description
+        self.job_location = job_location
+        self.job_pay_rate = job_pay_rate
+        self.max_hours_allowed = max_hours_allowed
 
 
 class User(db.Model, UserMixin):
+    """Model representing a user of the application."""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -55,4 +61,5 @@ class User(db.Model, UserMixin):
     reviews = db.relationship("Reviews", backref="author", lazy=True)
 
     def __repr__(self):
+        """Return a string representation of the User."""
         return f"User('{self.username}', '{self.email}', '{self.image_file}')"

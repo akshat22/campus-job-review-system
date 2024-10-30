@@ -11,7 +11,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install email_validator
 RUN pip install werkzeug==2.2.2
-RUN pip install flask-cors
 
 # Copy the rest of the application code
 COPY . .

@@ -1,13 +1,16 @@
-from app.services.job_fetcher import fetch_job_listings
-from flask import Blueprint, jsonify
-from flask import render_template, request, redirect, flash, url_for, abort
+"""
+This module defines the routes for the application, handling user
+authentication, reviews, and job vacancies.
+"""
+
+from flask import jsonify, render_template, request, redirect, flash, url_for, abort
+from flask_login import login_user, current_user, logout_user, login_required
 from app import app, db, bcrypt
 from app.models import Reviews, Vacancies, User
 from app.forms import RegistrationForm, LoginForm, ReviewForm
-from flask_login import login_user, current_user, logout_user, login_required
+from app.services.job_fetcher import fetch_job_listings
 
 app.config["SECRET_KEY"] = "5791628bb0b13ce0c676dfde280ba245"
-# app/routes/jobs.py
 
 
 @app.route("/")
@@ -20,6 +23,7 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Register a new user account."""
     if current_user.is_authenticated:
         return redirect(url_for("home"))
     form = RegistrationForm()
@@ -42,6 +46,7 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Log in a user."""
     if current_user.is_authenticated:
         return redirect(url_for("home"))
     form = LoginForm()
@@ -62,6 +67,7 @@ def login():
 
 @app.route("/logout")
 def logout():
+    """Log out the current user."""
     logout_user()
     flash("Logged out successfully!", "success")
     return redirect(url_for("home"))
@@ -77,6 +83,7 @@ def view_reviews():
 @app.route("/review/new", methods=["GET", "POST"])
 @login_required
 def new_review():
+    """Submit a new job review."""
     form = ReviewForm()
     if form.validate_on_submit():
         review = Reviews(
@@ -102,6 +109,7 @@ def new_review():
 
 @app.route("/review/<int:review_id>")
 def review(review_id):
+    """Render a specific review by ID."""
     review = Reviews.query.get_or_404(review_id)
     return render_template("review.html", review=review)
 
@@ -109,6 +117,7 @@ def review(review_id):
 @app.route("/review/<int:review_id>/update", methods=["GET", "POST"])
 @login_required
 def update_review(review_id):
+    """Update a specific review by ID."""
     review = Reviews.query.get_or_404(review_id)
     if review.author != current_user:
         abort(403)
@@ -144,6 +153,7 @@ def update_review(review_id):
 @app.route("/review/<int:review_id>/delete", methods=["POST"])
 @login_required
 def delete_review(review_id):
+    """Delete a specific review by ID."""
     review = Reviews.query.get_or_404(review_id)
     if review.author != current_user:
         abort(403)
@@ -154,10 +164,8 @@ def delete_review(review_id):
 
 
 @app.route("/dashboard")
-def getVacantJobs():
-    """
-    An API for the users to see all the available vacancies and their details
-    """
+def get_vacant_jobs():
+    """Render a dashboard showing all available job vacancies."""
     vacancies = Vacancies.query.all()
     return render_template("dashboard.html", vacancies=vacancies)
 
@@ -178,10 +186,12 @@ def getVacantJobs():
 @app.route("/account")
 @login_required
 def account():
+    """Render the user account page."""
     return render_template("account.html", title="Account")
 
 
 @app.route("/api/jobs", methods=["GET"])
 def get_jobs():
+    """Fetch job listings from an external source."""
     job_listings = fetch_job_listings()
     return jsonify(job_listings)
