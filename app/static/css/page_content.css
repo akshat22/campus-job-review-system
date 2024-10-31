@@ -149,4 +149,28 @@ form.filter::after {
   cursor: default;
 }
 
+.search-option {
+  margin-bottom: 20px; /* Adjust spacing as needed */
+}
 
+
+.filter-container {
+  display: flex; /* Use flexbox layout */
+  align-items: center; /* Align items vertically centered */
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+.filter-input {
+  margin-right: 30px; /* Space between the input fields */
+  flex: 1; /* Allow inputs to grow and fill available space */
+}
+
+.slider-container {
+  margin-right: 30px; /* Space between the slider and the inputs */
+  flex-grow: 2; /* Allow slider to take more space */
+}
+
+/* Optional: Style for the button */
+.filter-button {
+  margin-left: 20px; /* Space between the button and last input */
+}
