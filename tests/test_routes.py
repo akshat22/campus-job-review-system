@@ -3,38 +3,35 @@ import sys
 import pytest
 from app import app, db
 from app.models import User, Reviews
-from flask_login import login_user
+from flask import url_for
 
-sys.path.append(os.getcwd()[:-5] + "app")
-
+# Ensure the tests are run in the context of the application
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # Use an in-memory database for testing
     with app.test_client() as client:
         with app.app_context():
-            db.create_all()  # Create all tables
-        yield client
-        # Clean up after tests
-        with app.app_context():
-            db.session.remove()
-            db.drop_all()
+            db.create_all()  # Create the database
+            yield client
+            db.drop_all()  # Clean up the database after tests
 
 @pytest.fixture
 def login_user(client):
-    user = User(username="testuser", email="testuser@example.com")
-    user.set_password("testpassword")
+    user = User(username="testuser", email="testuser@example.com", password="testpassword")
     db.session.add(user)
     db.session.commit()
-    with client:
-        login_user(user)
-    yield client
+
+    # Log in the user
+    with client.session_transaction() as session:
+        session['user_id'] = user.id
+    return user
 
 @pytest.fixture
-def create_review(client, login_user):
-    review = Reviews(job_title="Sample Job", job_description="Job description", department="Dept",
-                     locations="Location", hourly_pay=20, benefits="Benefits", review="Good", rating=5,
-                     recommendation="Yes", author_id=1)  # Assume author_id=1 is the test user
+def create_review(login_user):
+    review = Reviews(job_title="Test Job", job_description="Test Description",
+                     department="Test Department", locations="Test Location",
+                     hourly_pay="20", benefits="None", review="Great job!",
+                     rating=5, recommendation="Yes", author=login_user)
     db.session.add(review)
     db.session.commit()
     return review
@@ -52,7 +49,11 @@ def test_register_get(client):
     assert response.status_code == 200
 
 def test_register_post(client):
-    response = client.post('/register', data={'username': 'asavla2', 'password': 'pass', 'email': 'asavla2@ncsu.edu'})
+    response = client.post('/register', data={
+        'username': 'asavla2',
+        'password': 'pass',
+        'email': 'asavla2@ncsu.edu'
+    })
     assert response.status_code == 200
 
 def test_login_get(client):
@@ -60,7 +61,10 @@ def test_login_get(client):
     assert response.status_code == 200
 
 def test_login_post(client):
-    response = client.post('/login', data={'email': 'asavla2@ncsu.edu', 'password': 'pass'})
+    response = client.post('/login', data={
+        'email': 'asavla2@ncsu.edu',
+        'password': 'pass'
+    })
     assert response.status_code == 200
 
 def test_logout_get(client):
@@ -90,49 +94,51 @@ def test_add_review_route_post(client):
     assert response.status_code == 302
 
 def test_view_review(client, create_review):
-    response1 = client.get('/review/1')  # Use the correct review ID created in the fixture
-    response2 = client.get('/review/5')
+    response1 = client.get(f'/review/{create_review.id}')
+    response2 = client.get('/review/1')
     assert response1.status_code == 200
     assert response2.status_code == 404
 
 def test_update_review_get(client, login_user, create_review):
-    response = client.get('/review/1/update')  # Assuming the ID of the created review is 1
+    response = client.get(f'/review/{create_review.id}/update')
     assert response.status_code == 200
 
 def test_update_review_post(client, login_user, create_review):
-    response = client.post('/review/1/update', data={  # Use the correct review ID
-        "job_title": "Updated Job Title",
-        "job_description": "Updated Job Description",
-        "department": "Updated Dept",
+    response = client.post(f'/review/{create_review.id}/update', data={
+        "job_title": "Updated Job",
+        "job_description": "Updated Description",
+        "department": "Updated Department",
         "locations": "Updated Location",
-        "hourly_pay": "25",
-        "benefits": "Updated Benefits",
-        "review": "Updated Review",
+        "hourly_pay": "30",
+        "benefits": "More Benefits",
+        "review": "Updated review text.",
         "rating": "4",
         "recommendation": "No",
     })
-    assert response.status_code == 302  # Redirect expected after a successful update
+    assert response.status_code == 302  # Check if it redirects after update
 
 def test_update_review_unauthorized(client, create_review):
-    # Simulate an unauthorized user trying to update a review
-    unauthorized_user = User(username="unauthorized", email="unauth@example.com")
-    unauthorized_user.set_password("wrongpassword")
+    # Test case for unauthorized user trying to update a review
+    unauthorized_user = User(username="unauthorized_user", email="unauth@example.com", password="password")
     db.session.add(unauthorized_user)
     db.session.commit()
-    with client:
-        login_user(unauthorized_user)
-        response = client.post('/review/1/update', data={
-            "job_title": "Another Update",
-            "job_description": "Another Update Description",
-            "department": "Another Dept",
-            "locations": "Another Location",
-            "hourly_pay": "30",
-            "benefits": "Another Benefits",
-            "review": "Another Review",
-            "rating": "3",
-            "recommendation": "Yes",
-        })
-    assert response.status_code == 403  # Forbidden since user is not the author
+
+    # Log in as unauthorized user
+    with client.session_transaction() as session:
+        session['user_id'] = unauthorized_user.id
+
+    response = client.post(f'/review/{create_review.id}/update', data={
+        "job_title": "Updated Job",
+        "job_description": "Updated Description",
+        "department": "Updated Department",
+        "locations": "Updated Location",
+        "hourly_pay": "30",
+        "benefits": "More Benefits",
+        "review": "Updated review text.",
+        "rating": "4",
+        "recommendation": "No",
+    })
+    assert response.status_code == 403  # Check if it raises a forbidden error
 
 def test_dashboard_route(client):
     response = client.get('/dashboard')
