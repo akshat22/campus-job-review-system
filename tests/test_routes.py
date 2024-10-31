@@ -132,3 +132,44 @@ def test_account_route(client):
 def test_get_jobs(client):
     response = client.get('/api/jobs')
     assert response.status_code == 200
+
+def test_new_review(client, login_user):
+    # Log in the user
+    with client.session_transaction() as session:
+        session['user_id'] = login_user.id  # Simulate user login
+
+    # Prepare the data to submit a new review
+    review_data = {
+        "job_title": "Software Engineer",
+        "job_description": "Develops software applications.",
+        "department": "Engineering",
+        "locations": "Remote",
+        "hourly_pay": "50",
+        "benefits": "Health Insurance, Paid Time Off",
+        "review": "Great place to work!",
+        "rating": "5",
+        "recommendation": "Yes",
+    }
+
+    # Submit the new review
+    response = client.post('/review/new', data=review_data, follow_redirects=True)
+
+    # Check if the response is a redirect to the view reviews page
+    assert response.status_code == 200  # Ensure the response is OK after redirect
+    assert b"Review submitted successfully!" in response.data  # Check for success message
+    assert Reviews.query.filter_by(job_title="Software Engineer").count() == 1  # Verify the review is in the database
+
+def test_delete_review(client, login_user, create_review):
+    # Log in the user
+    with client.session_transaction() as session:
+        session['user_id'] = login_user.id  # Simulate user login
+
+    # Submit the delete request
+    response = client.post(f'/review/{create_review.id}/delete', follow_redirects=True)
+
+    # Check if the response is a redirect to the view reviews page
+    assert response.status_code == 200
+    assert b"Your review has been deleted!" in response.data  # Check for success message
+
+    # Verify the review was deleted from the database
+    assert Reviews.query.get(create_review.id) is None  # Review should not exist
