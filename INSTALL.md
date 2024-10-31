@@ -38,8 +38,14 @@ Follow the steps below to set up the Campus Job Review System. You can choose to
    cd campus-job-review-system
    ```
 3. **Run the Deployment Script:**
+   #### For Mac OS
    ```bash
    bash deploy.sh
+   ```
+
+   #### For Windows
+   ```bash
+   sh deploy.sh
    ```
    This script will build and run the Docker container.
 
