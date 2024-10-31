@@ -1,10 +1,12 @@
+"""Configuration module for the application."""
+
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    """The class creates a connection to the database"""
+    """Configuration class for setting up the application environment."""
 
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL"

@@ -1,95 +1,145 @@
-Installing Python
-==========================
+# Installation Guide
 
-Based on the Operating System of your PC, you can download and install Python's latest as well as older versions. Please find below instructions for the same based on your OS.
+Follow the steps below to set up the Campus Job Review System. You can choose to install using Docker or without Docker.
 
+---
 
-## Installing (for Windows)
+## Table of Contents
+- [Installation with Docker](#installation-with-docker)
+   - [Docker Prerequisites](#docker-prerequisites)
+   - [Docker Installation Steps](#docker-project-setup)
+- [Installation without Docker](#installation-without-docker)
+   - [Prerequisites](#prerequisites)
+      - [For Windows](#for-windows)
+      - [For Mac OS](#for-mac-os)
+   - [Project Setup](#project-setup)
+   - [Database Maintenance](#database-maintenance)
 
-Download the windows installer for the python version you desire from [Python Downloads](https://www.python.org/downloads/)
+---
 
-Double-click on the downloaded file and follow the instructions as requested.
+## Installation with Docker
 
-Once completed, add python in the environment variables of your system settings to enable python compiling from your command line.
+### Docker Prerequisites
+1. **Install Docker:**
+   - [Get Docker for Windows/Mac/Linux](https://docs.docker.com/get-docker/).
+   - Follow the instructions on Docker’s website to install Docker Desktop on your system.
+   - After installation, verify by running:
+     ```bash
+     docker --version
+     ```
 
-You can verify if the Python installation is successful either through the command line or through the IDLE app that gets installed along with the installation. Search for the command prompt and type “python”. You can see that Python "version" is successfully installed.
+### Docker Project Setup
+1. **Clone the Project:**
+   ```bash
+   git clone https://github.com/SE-Group-95/campus-job-review-system.git
+   ```
+2. **Navigate to the Project Directory:**
+   ```bash
+   cd campus-job-review-system
+   ```
+3. **Run the Deployment Script:**
+   #### For Mac OS
+   ```bash
+   bash deploy.sh
+   ```
 
-To check python version, run this command in your CMD or Terminal:
+   #### For Windows
+   ```bash
+   sh deploy.sh
+   ```
+   This script will build and run the Docker container.
 
-```bash
-python --version
-```
-```
-git clone https://github.com/ashishjoshi2605/ncsu-campus-jobs-review-system.git
-```
-```
-cd ncsu-campus-jobs-review-system/
-```
-```
-python -m venv venv
-```
-```
-.\venv\Scripts\activate
-```
-```
-pip install --upgrade pip
-```
-```
-pip install -r requirements.txt
-```
-```
-set FLASK_APP=crudapp.py
-```
-```
-flask db init
-```
-```
-flask db migrate -m "entries table"
-```
-```
-flask db upgrade
-```
-```
-flask run
-```
+4. **Access the Application:**
+   Once the container is running, you should be able to access the application locally at `http://localhost:3000`.
 
+---
 
-## Mac OS
+## Installation without Docker
 
-MacOS comes with Python pre-installed. But it's Python Version 2.7, which is now deprecated (abandoned by the Python developer community).
+### Prerequisites
 
-To install the latest version of python in your mac, first you need to install [Homebrew](https://brew.sh/), a powerful package manager for Mac.
+1. **Installing Python:**
 
-Open your terminal and run this command to install Homebrew in your system:
-```bash
-"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
+    #### For Windows
+    
+    1. Download the Python installer from [Python Downloads](https://www.python.org/downloads/).
+    2. Run the installer and follow the prompts. Ensure you add Python to your environment variables.
+    3. Verify the installation:
+       ```bash
+       python --version
+       ```
+    
+    #### For Mac OS
+    
+    1. Install [Homebrew](https://brew.sh/) (if not already installed):
+       ```bash
+       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+       ```
+    2. Use Homebrew to install Python:
+       ```bash
+       brew install python
+       ```
+    3. Verify the installation:
+       ```bash
+       python --version
+       ```
 
-Your terminal will ask for admin.user access of your system. You will need to type your password to run this command. This is the same password you type when you log into your Mac. Type it and hit enter.
+### Project Setup
 
-Once you are done with installing the Homebrew package, you can run this command in your terminal to install python with the desired version you want.
+1. **Clone the Project:**
+   ```bash
+   git clone https://github.com/SE-Group-95/campus-job-review-system.git
+   ```
+2. **Navigate to the Project Directory:**
+   ```bash
+   cd campus-job-review-system/
+   ```
+3. **Set Up a Virtual Environment:**
+   ```bash
+   python -m venv venv
+   ```
+4. **Activate the Virtual Environment:**
+    - On Windows:
+      ```bash
+      .\venv\Scripts\activate
+      ```
+    - On Mac OS/Linux:
+      ```bash
+      source venv/bin/activate
+      ```
+5. **Install Dependencies:**
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+6. **Database Setup:**
+    - Initialize the database:
+      ```bash
+      flask db init
+      ```
+    - Apply migrations:
+      ```bash
+      flask db migrate -m "Initial migration"
+      flask db upgrade
+      ```
+7. **Run the Application:**
+   ```bash
+   flask run
+   ```
+   The application will start on `http://localhost:5000`.
 
-```bash
-python version 3.6.5
-```
-Once done, you can run this command to check if you have successfully installed python in your system or its version:
-```bash
-python3 --version
-```
+### Database Maintenance
 
-## Maintaining Database file
-
-To create/add new tables, run the following commands before starting the server:
+To create new tables, run:
 ```bash
 flask shell
 from app import db
 db.create_all()
-````
+```
 
-To delete all the tables, run following commands before starting the server:
+To delete all tables:
 ```bash
 flask shell
 from app import db
 db.drop_all()
 ```
-

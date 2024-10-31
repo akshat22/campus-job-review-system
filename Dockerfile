@@ -9,6 +9,7 @@ COPY requirements.txt /app/requirements.txt
 
 # Install dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install pytest coverage
 
 # Copy the rest of the application code to /app
 COPY . /app
