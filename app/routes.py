@@ -67,9 +67,12 @@ def logout():
 
 @app.route("/review/all")
 def view_reviews():
-    """An API for the user to view all the reviews entered"""
-    entries = Reviews.query.all()
+    """An API for the user to view all the reviews entered with pagination"""
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Adjust as needed
+    entries = Reviews.query.paginate(page=page, per_page=per_page)
     return render_template("view_reviews.html", entries=entries)
+
 
 
 @app.route("/review/new", methods=["GET", "POST"])
@@ -160,31 +163,42 @@ def getVacantJobs():
     return render_template("dashboard.html", vacancies=vacancies)
 
 
-@app.route('/pageContentPost', methods=['POST'])
+@app.route('/pageContentPost', methods=['POST', 'GET'])
 def page_content_post():
-    """An API for the user to view specific reviews depending on the job title, location, and rating range."""
-    if request.method == 'POST':
-        search_title = request.form.get('search_title')
-        search_location = request.form.get('search_location')
-        min_rating = request.form.get('min_rating', type=int)  # Default to 1 if not provided
-        max_rating = request.form.get('max_rating', type=int)  # Default to 5 if not provided
+    """An API for the user to view specific reviews depending on the job title, location, and rating range with pagination."""
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Set items per page as desired
 
-        query = Reviews.query
+    # Retrieve form data
+    search_title = request.form.get('search_title', '')
+    search_location = request.form.get('search_location', '')
+    min_rating = request.form.get('min_rating', type=int, default=1)
+    max_rating = request.form.get('max_rating', type=int, default=5)
 
-        # Filter by job title if provided
-        if search_title.strip():
-            query = query.filter(Reviews.job_title.ilike(f'%{search_title}%'))
+    # Initial query for reviews
+    query = Reviews.query
 
-        # Filter by location if provided
-        if search_location.strip():
-            query = query.filter(Reviews.locations.ilike(f'%{search_location}%'))
+    # Apply filters if search fields are filled
+    if search_title.strip():
+        query = query.filter(Reviews.job_title.ilike(f'%{search_title}%'))
+    if search_location.strip():
+        query = query.filter(Reviews.locations.ilike(f'%{search_location}%'))
+    if min_rating is not None and max_rating is not None:
+        query = query.filter(Reviews.rating.between(min_rating, max_rating))
 
-        # Filter by rating range if provided
-        if min_rating is not None and max_rating is not None:
-            query = query.filter(Reviews.rating.between(min_rating, max_rating))
+    # Paginate the results
+    entries = query.paginate(page=page, per_page=per_page)
 
-        entries = query.all()
-        return render_template('view_reviews.html', entries=entries)
+    # Pass search terms back to the template to preserve state across pagination
+    return render_template(
+        'view_reviews.html',
+        entries=entries,
+        search_title=search_title,
+        search_location=search_location,
+        min_rating=min_rating,
+        max_rating=max_rating
+    )
+
 
 
 
