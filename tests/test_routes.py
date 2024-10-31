@@ -15,9 +15,12 @@ bcrypt = Bcrypt(app)
 import time
 
 def setup_module(module):
-    unique_email = f"testuser_{int(time.time())}@ncsu.edu"
+    # Clear user table to avoid duplicate email entries
+    User.query.delete()
+    db.session.commit()
+
     hashed_password = bcrypt.generate_password_hash("password").decode('utf-8')
-    test_user = User(username="testuser", email=unique_email, password=hashed_password)
+    test_user = User(username="testuser", email="testuser@ncsu.edu", password=hashed_password)
     db.session.add(test_user)
     db.session.commit()
 
