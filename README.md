@@ -16,9 +16,9 @@
 
 ## 🎉 Welcome to the NCSU Campus Job Review System!
 
-Are you a student at NC State looking for the perfect campus job? Look no further! Our **Campus Job Review System** is here to help you make informed decisions about job opportunities on campus. With anonymous reviews from fellow students, you can gain insights into what it's really like to work in different roles.
+Are you a student at NC State looking for the perfect campus job? Look no further! Our **Campus Job Review System** is here to help you make informed decisions about job opportunities on campus. With reviews from fellow students, you can gain insights into what it's really like to work in different roles.
 
-![homepage](Data/homepage.jpeg)
+[![Watch the video](https://img.youtube.com/vi/0n-MzIKCS4w/maxresdefault.jpg)](https://youtu.be/0n-MzIKCS4w)
 
 ---
 
@@ -56,6 +56,16 @@ This is just one example of how our system can help students like Alex navigate 
 - **Rating System**: Rate jobs to help highlight the best opportunities available.
 - **Search and Filter**: Quickly find reviews based on job titles, departments, or keywords.
 
+## Technology Stack
+
+<code><a href="https://developer.mozilla.org/en-US/docs/Glossary/HTML5" target="_blank"><img src = "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="50"/></a></code>
+<code><a href="https://flask.palletsprojects.com/en/1.1.x/" target="_blank"><img height="50" src="https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white"></a></code>
+<code><a href="https://developer.mozilla.org/en-US/docs/Glossary/HTML5" target="_blank"><img height="50" src="https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582748_1280.png"></a></code>
+<code><a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank"><img height="50" src="https://cdn.pixabay.com/photo/2017/08/05/11/16/logo-2582747_1280.png"></a></code>
+<code><a href="https://www.javascript.com/" target="_blank"><img height="50" src="https://cdn.freelogovectors.net/wp-content/uploads/2020/11/javascript_logo-768x873.png"></a></code>
+<code><a href="https://www.sqlite.org/index.html" target="_blank"><img height="50" src="https://www.vectorlogo.zone/logos/sqlite/sqlite-icon.svg"></a></code>
+
+
 ---
 
 ## Table of Contents
@@ -67,6 +77,7 @@ This is just one example of how our system can help students like Alex navigate 
 - [Contribution Guidelines](#-contribution-guidelines)
 - [Code Coverage](#-code-coverage)
 - [Chat Channel](#-chat-channel)
+- [Future Scope](#-future-scope)
 - [Contributors](#-contributors)
 - [Acknowledgements](#-acknowledgements)
 
@@ -82,30 +93,47 @@ cd campus-job-review-system
 ```
 Choose Your Installation Method (with Docker or without Docker). Detailed instructions are available in [INSTALL.md](INSTALL.md).
 
+
 ## 📄 API Documentation
-Explore the API documentation for comprehensive details on available endpoints, request/response formats, and example usage [here](docs/index.html).
+Explore the API documentation for comprehensive details on available endpoints, request/response formats, and example usage [here](https://se-group-95.github.io/campus-job-review-system/app.html).
+
 
 ## 🎥 Demo Video
 Check out our demo video to see the application in action! Click the link below to watch:
-https://user-images.githubusercontent.com/50794731/205819285-9d4875ed-172e-427c-9c0c-591957081a78.mp4
+
+[![Watch the video](https://img.youtube.com/vi/wi0A6qIHnHk/maxresdefault.jpg)](https://youtu.be/wi0A6qIHnHk)
+
 
 ## 📊 Project Poster
 Curious about our project? View our project poster showcasing key aspects of the system [here](https://www.canva.com/design/DAGSSn3puco/iCHapSDmDS8HxcAHrv_Hyg/view?utm_content=DAGSSn3puco&utm_campaign=designshare&utm_medium=link&utm_source=editor).
 
-## 🤝 Contribution Guidelines
 
+## 🤝 Contribution Guidelines
 The rules listed below are to be followed by the ones who will be contributing to the code in the repository:
   
   - Atleast one review/approval is required from any other contributors of the project to merge a commit to the main branch.
   - It is recommended to delete the branch as soon as it is merged to the main branch to avoid stale branches in the repository.
   - It is encouraged to add name tags such as "feature/" or "patch/" in the branches if it is used to add code-patches or features in the project.
   
-### 📈 Code Coverage
 
-![alt text](https://github.com/akshat22/campus-job-review-system/blob/main/Data/code_coverage.jpeg)
+## 📈 Code Coverage
+[![codecov.io](https://codecov.io/github/SE-Group-95/campus-job-review-system/coverage.svg?branch=master)](https://codecov.io/github/SE-Group-95/campus-job-review-system?branch=main) It is part of the [Github Workflow Build](https://github.com/SE-Group-95/campus-job-review-system/actions/workflows/code_coverage.yml)
 
-### 💬 Chat Channel
+
+## 💬 Chat Channel
 ![Chat.png](Data%2FChat.png)
+
+
+## 🌐 Future Scope
+We’re excited about the enhancements coming to the NCSU Campus Jobs Review System! Here’s what’s on the horizon:
+- Interactive Voting System: We’ll introduce upvote and downvote functionality for more engaging and reliable feedback on reviews.
+
+- Extended Job Portals: Currently limited to one job portal, we plan to aggregate reviews from multiple sources to broaden job opportunities for students.
+
+- Enhanced User Interface: Expect a cleaner, more dynamic UI for a smoother, more enjoyable user experience.
+
+- Integrated Job Application Portal: Soon, you’ll be able to apply directly for reviewed positions through our platform, streamlining the application process.
+
 
 ## 🙌 Contributors
 A heartfelt thank you to our contributors who made this project possible:
@@ -114,8 +142,18 @@ A heartfelt thank you to our contributors who made this project possible:
 - [Sidharrth Gandhi](https://github.com/22SiD)
 - [Prachi Navale](https://github.com/prachinav)
 
+
 ## 🙏 Acknowledgements
 We would like to thank Professor Dr Timothy Menzies for helping us understand the process of building a good Software Engineering project. We would also like to thank the teaching assistants for their support throughout the project.
 
+
 ## 💡 Feedback
 We love hearing from you! Please open an issue or submit a pull request if you have suggestions for improvements or new features. Your feedback helps us grow!
+
+
+## 🙏 Special Thanks to Previous Contributors
+We extend our gratitude to the [previous contributors](https://github.com/akshat22/campus-job-review-system) who helped lay the foundation for this project. Their contributions have been instrumental in making the NCSU Campus Job Review System what it is today!
+
+
+## ⚠️ Disclaimer
+The NCSU Campus Job Review System dynamically retrieves job vacancies from the official [NC State Campus Enterprises website](https://campusenterprises.ncsu.edu/dept/hr/opportunities/student/jobs/). We do not own or manage this data; instead, our system serves as an interface to make job listings more accessible to NC State students by aggregating real-time job opportunities for convenient browsing. All job data is the property of NC State University Campus Enterprises, and any changes or updates to job listings on their website will be reflected here accordingly.
