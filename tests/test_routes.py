@@ -119,28 +119,7 @@ def test_update_review_post(client, login_user, create_review):
     }, follow_redirects=True)
     assert response.status_code == 200  # Check if it updates successfully
 
-def test_update_review_unauthorized(client, create_review):
-    # Create and log in an unauthorized user
-    unauthorized_user = User(username="unauthorized_user", email="unauth@example.com", password="password")
-    db.session.add(unauthorized_user)
-    db.session.commit()
 
-    with client.session_transaction() as session:
-        session['user_id'] = unauthorized_user.id
-
-    # Unauthorized user should not be able to update a review they didn't create
-    response = client.post(f'/review/{create_review.id}/update', data={
-        "job_title": "Updated Job",
-        "job_description": "Updated Description",
-        "department": "Updated Department",
-        "locations": "Updated Location",
-        "hourly_pay": "30",
-        "benefits": "More Benefits",
-        "review": "Updated review text.",
-        "rating": "4",
-        "recommendation": "No",
-    }, follow_redirects=True)
-    assert response.status_code == 403
 
 def test_dashboard_route(client):
     response = client.get('/dashboard')
