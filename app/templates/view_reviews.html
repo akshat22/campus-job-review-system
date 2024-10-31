@@ -58,18 +58,18 @@ document.addEventListener("DOMContentLoaded", function() {
     <input type="text" placeholder="Search Location..." name="search_location" class="filter-input" />
     
     <div class="slider-container">
-      <label>Rating Range:</label>
+      
       <div id="rating-slider" class="slider"></div>
-      <div class="rating-values">
-        <span id="min-rating-display">1</span> - <span id="max-rating-display">5</span>
-      </div>
+      <div class="rating-values"></div>
       <input type="hidden" name="min_rating" id="min-rating" value="1" />
       <input type="hidden" name="max_rating" id="max-rating" value="5" />
+      <label>Rating Range:</label>
     </div>
     
     <button type="submit" class="filter-button"><i class="fa fa-search"></i> Search</button>
   </div>
 </form>
+
 
 <br /><br />
 <div style="background-color: white">
