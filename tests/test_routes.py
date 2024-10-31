@@ -8,12 +8,16 @@ from app.models import Reviews, User
 from flask_login import login_user
 
 # Set up user and review for testing
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt(app)
+
 def setup_module(module):
-    # Assumes test database setup is in place
-    test_user = User(username="testuser", email="testuser@ncsu.edu")
-    test_user.set_password("password")
+    hashed_password = bcrypt.generate_password_hash("password").decode('utf-8')
+    test_user = User(username="testuser", email="testuser@ncsu.edu", password=hashed_password)
     db.session.add(test_user)
     db.session.commit()
+
 
     test_review = Reviews(
         job_title="Test Job",
