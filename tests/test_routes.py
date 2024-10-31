@@ -140,7 +140,7 @@ def test_update_review_unauthorized(client, create_review):
         "rating": "4",
         "recommendation": "No",
     }, follow_redirects=True)
-    assert b"You are not authorized to update this review" in response.data
+    assert response.status_code == 403
 
 def test_dashboard_route(client):
     response = client.get('/dashboard')
