@@ -36,7 +36,7 @@ def setup_module(module):
         review="Good experience",
         rating=4,
         recommendation=1,
-        author_id=test_user.id,
+        user_id=test_user.id,
     )
     db.session.add(test_review)
     db.session.commit()
