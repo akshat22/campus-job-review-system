@@ -167,3 +167,55 @@ def test_delete_review(client, login_user, create_review):
 
     # Check if the response is a redirect to the view reviews page
     assert response.status_code == 200
+
+def test_page_content_post(client, create_reviews):  # Assuming create_reviews is a fixture that populates the database
+    # Prepare the search parameters
+    response = client.post('/pageContentPost', data={
+        'search_title': 'Software Engineer',
+        'search_location': 'New York',
+        'min_rating': 3,
+        'max_rating': 5
+    }, follow_redirects=True)
+
+    # Check if the response is successful
+    assert response.status_code == 200
+
+    # Check if the response contains the relevant reviews
+    assert b'Software Engineer' in response.data
+    assert b'New York' in response.data
+
+    # Verify that the rating is within the specified range
+    for review in Reviews.query.all():  # Assuming Reviews is a model that can be queried
+        if review.rating:
+            assert 3 <= review.rating <= 5  # Check if the review rating is within the specified range
+
+
+def test_page_content_post_pagination(client, create_reviews):  # Assuming create_reviews creates more than 5 reviews
+    # Request the first page
+    response = client.post('/pageContentPost?page=1', data={}, follow_redirects=True)
+    assert response.status_code == 200
+    assert b'Pagination' in response.data  # Check for pagination element
+    assert len(response.context['entries'].items) <= 5  # Check that items per page are correct
+
+    # Request the second page
+    response = client.post('/pageContentPost?page=2', data={}, follow_redirects=True)
+    assert response.status_code == 200
+    assert len(response.context['entries'].items) <= 5  # Ensure still limited to items per page
+
+def test_page_content_post_search_criteria_persistence(client, create_reviews):
+    # Perform a search with specific parameters
+    response = client.post('/pageContentPost', data={
+        'search_title': 'Software Engineer',
+        'search_location': 'New York',
+        'min_rating': 3,
+        'max_rating': 5
+    }, follow_redirects=True)
+
+    # Check if the response is successful
+    assert response.status_code == 200
+
+    # Verify that the search criteria are retained in the response
+    assert b'Software Engineer' in response.data
+    assert b'New York' in response.data
+    assert b'3' in response.data  # Check if the min rating is displayed
+    assert b'5' in response.data  # Check if the max rating is displayed
