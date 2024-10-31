@@ -14,9 +14,6 @@ def client():
             yield client
             db.drop_all()
 
-import pytest
-from your_app.models import Reviews, User  # Adjust the import according to your app structure
-from your_app import db
 
 @pytest.fixture
 def create_reviews(client, login_user):
