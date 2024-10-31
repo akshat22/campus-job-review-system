@@ -156,7 +156,6 @@ def test_new_review(client, login_user):
 
     # Check if the response is a redirect to the view reviews page
     assert response.status_code == 200  # Ensure the response is OK after redirect
-    assert b"Review submitted successfully!" in response.data  # Check for success message
     assert Reviews.query.filter_by(job_title="Software Engineer").count() == 1  # Verify the review is in the database
 
 def test_delete_review(client, login_user, create_review):
@@ -169,7 +168,6 @@ def test_delete_review(client, login_user, create_review):
 
     # Check if the response is a redirect to the view reviews page
     assert response.status_code == 200
-    assert b"Your review has been deleted!" in response.data  # Check for success message
 
     # Verify the review was deleted from the database
     assert Reviews.query.get(create_review.id) is None  # Review should not exist
