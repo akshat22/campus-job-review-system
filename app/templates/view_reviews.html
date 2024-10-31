@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 
 <link
   rel="stylesheet"
@@ -70,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function() {
   </div>
 </form>
 
-
 <br /><br />
 <div style="background-color: white">
   <table class="sortable table table-hover">
@@ -89,8 +89,7 @@ document.addEventListener("DOMContentLoaded", function() {
       </tr>
     </thead>
     <tbody>
-      {% for entry in entries %}
-
+      {% for entry in entries.items %}
       <tr>
         <td>
           <strong
@@ -110,25 +109,35 @@ document.addEventListener("DOMContentLoaded", function() {
         <td>{{ entry.rating }}</td>
         <td>{{ entry.recommendation }}</td>
         <td>{{ entry.author.username }}</td>
-
-        <!-- <td>
-                            <a class="{{ 'btn btn-success' if entry.status else 'btn btn-dark'}}"
-                               href="/turn/{{ entry.id }}">
-                                Turn Status
-                            </a>
-                            <a class="btn btn-danger"
-                               href="/delete/{{ entry.id }}">
-                                Delete
-                            </a>
-                            <a class="btn btn-info"
-                               href="/update/{{ entry.id }}">
-                                Edit
-                            </a>
-                        </td> -->
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<!-- Pagination controls -->
+<div class="pagination-container">
+  {% if entries.has_prev %}
+    <a href="{{ url_for('page_content_post', page=entries.prev_num, search_title=search_title, search_location=search_location, min_rating=min_rating, max_rating=max_rating) }}" class="page-link">&laquo; Previous</a>
+  {% endif %}
+
+  {% for page_num in entries.iter_pages() %}
+    {% if page_num %}
+      {% if page_num == entries.page %}
+        <span class="page-link active">{{ page_num }}</span>
+      {% else %}
+        <a href="{{ url_for('page_content_post', page=page_num, search_title=search_title, search_location=search_location, min_rating=min_rating, max_rating=max_rating) }}" class="page-link">{{ page_num }}</a>
+      {% endif %}
+    {% else %}
+      <span class="page-link">...</span>
+    {% endif %}
+  {% endfor %}
+
+  {% if entries.has_next %}
+    <a href="{{ url_for('page_content_post', page=entries.next_num, search_title=search_title, search_location=search_location, min_rating=min_rating, max_rating=max_rating) }}" class="page-link">Next &raquo;</a>
+  {% endif %}
+</div>
+
+
 
 {% endblock %}
