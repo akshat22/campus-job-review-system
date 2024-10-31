@@ -2,7 +2,7 @@
  
 <!-- <a href="https://github.com/ashishjoshi2605/ncsu-campus-jobs-review-system/actions" alt="Build Status"><img src="https://img.shields.io/github/workflow/status/ashishjoshi2605/ncsu-campus-jobs-review-system/Build%20main" /></a> -->
 <!-- <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/ashishjoshi2605/ncsu-campus-jobs-review-system/website?color=magenta&label=Documentation"> -->
-[![DOI](https://zenodo.org/badge/571841941.svg)](https://zenodo.org/badge/latestdoi/571841941)
+[![DOI](https://zenodo.org/badge/865464151.svg)](https://doi.org/10.5281/zenodo.14015306)
 [![License](https://img.shields.io/github/license/SE-Group-95/campus-job-review-system)](https://github.com/SE-Group-95/campus-job-review-system/blob/main/LICENSE)
 [![GitHub Release](https://img.shields.io/github/release/SE-Group-95/campus-job-review-system.svg)](https://github.com/SE-Group-95/campus-job-review-system/releases)
 [![codecov](https://codecov.io/gh/SE-Group-95/campus-job-review-system/branch/main/graph/badge.svg)](https://codecov.io/gh/SE-Group-95/campus-job-review-system)
@@ -36,16 +36,15 @@ This is a Flask App for NCSU Campus Job Review System with SQL database for stor
 
 ---
 
-
 ## Installation
 To set up the project locally, follow these steps.
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/SE-Group-95/campus-job-review-system.git
-   cd campus-job-review-system
-   ```
-Choose Your Installation Method (with Docker or without Docker). Detailed instructions are available in INSTALL.md.
+**Clone the Repository:**
+```bash
+git clone https://github.com/SE-Group-95/campus-job-review-system.git
+cd campus-job-review-system
+```
+Choose Your Installation Method (with Docker or without Docker). Detailed instructions are available in [INSTALL.md](INSTALL.md).
 
 ## API Documentation
 You can view the API documentation for this project [here](docs/index.html).
@@ -53,9 +52,8 @@ You can view the API documentation for this project [here](docs/index.html).
 ## Demo Video
 https://user-images.githubusercontent.com/50794731/205819285-9d4875ed-172e-427c-9c0c-591957081a78.mp4
 
-
 ## Poster for Stage 1
-![alt text](https://github.com/ashishjoshi2605/ncsu-campus-jobs-review-system/blob/main/app/static/Poster.jpg)
+You can view the project poster [here](https://www.canva.com/design/DAGSSn3puco/iCHapSDmDS8HxcAHrv_Hyg/view?utm_content=DAGSSn3puco&utm_campaign=designshare&utm_medium=link&utm_source=editor).
 
 ## Contribution Code of Conduct
 
@@ -70,16 +68,13 @@ The rules listed below are to be followed by the ones who will be contributing t
 ![alt text](https://github.com/akshat22/campus-job-review-system/blob/main/Data/code_coverage.jpeg)
 
 ### Chat Channel Screenshot
-
-![alt text](https://github.com/akshat22/campus-job-review-system/blob/main/Data/chatCommunication.jpeg)
+![Chat.png](Data%2FChat.png)
 
 ## Deployment
 We have deployed our website [here](http://44.204.178.112:5000/)
 
 ## Contributors
 
-- [Mohit Soni](https://github.com/mohitsoni2111)
-- [Tilak Satra](https://github.com/tilaksatra)
-- [Akshat Savla](https://github.com/akshat22)
-- [Madiha Mansoori](https://github.com/madiha2001)
-- [Anagha Patil](https://github.com/Anagha-2000)
+- [Mayur Gotmare](https://github.com/MayurG26)
+- [Sidharrth Gandhi](https://github.com/22SiD)
+- [Prachi Navale](https://github.com/prachinav)

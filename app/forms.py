@@ -37,8 +37,7 @@ class RegistrationForm(FlaskForm):
         """Validate that the email is unique."""
         user = User.query.filter_by(email=email.data).first()
         if user:
-            raise ValidationError(
-                "An account already exists with this email address.")
+            raise ValidationError("An account already exists with this email address.")
 
 
 class LoginForm(FlaskForm):
@@ -56,9 +55,7 @@ class ReviewForm(FlaskForm):
     department = StringField("Department", validators=[DataRequired()])
     locations = StringField("Location", validators=[DataRequired()])
     job_title = StringField("Job Title", validators=[DataRequired()])
-    job_description = StringField(
-        "Job Description", validators=[
-            DataRequired()])
+    job_description = StringField("Job Description", validators=[DataRequired()])
     hourly_pay = StringField("Hourly Pay", validators=[DataRequired()])
     benefits = StringField("Benefits", validators=[DataRequired()])
     review = TextAreaField("Review", validators=[DataRequired()])

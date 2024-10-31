@@ -1,26 +1,29 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.12
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
 
-# Set the working directory in the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Copy the requirements file into the container at /app
+COPY requirements.txt /app/requirements.txt
 
 # Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install email_validator
-RUN pip install werkzeug==2.2.2
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy the rest of the application code
-COPY . .
+# Copy the rest of the application code to /app
+COPY . /app
 
 # Set environment variables
 ENV FLASK_APP=crudapp.py
-ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_ENV=development
 
-# Expose the port the app runs on
+# Initialize the database
+RUN flask db init || true
+RUN flask db migrate -m "entries table" || true
+RUN flask db upgrade || true
+
+# Expose port 5000
 EXPOSE 5000
 
 # Run the application
-CMD ["flask", "run"]
+CMD ["flask", "run", "--host=0.0.0.0"]
