@@ -159,8 +159,7 @@ def getVacantJobs():
     """
     An API for the users to see all the available vacancies and their details
     """
-    vacancies = Vacancies.query.all()
-    return render_template("dashboard.html", vacancies=vacancies)
+    return render_template("dashboard.html")
 
 
 @app.route('/pageContentPost', methods=['POST', 'GET'])
