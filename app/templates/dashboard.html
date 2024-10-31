@@ -23,12 +23,12 @@
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 <script>
     // Initialize SocketIO connection
-    const socket = io.connect('http://127.0.0.1:5000');  // Replace with your server's address if needed
+    const socket = io.connect('http://localhost:5001');
 
     // Event listener for real-time job updates
     socket.on('update_jobs', (data) => {
         const jobListingsContainer = document.getElementById('job-listings');
-        jobListingsContainer.innerHTML = '';  // Clear previous listings
+        jobListingsContainer.innerHTML = '';
 
         data.forEach(vacancy => {
             const row = document.createElement('tr');

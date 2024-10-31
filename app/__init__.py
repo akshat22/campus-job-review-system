@@ -7,6 +7,7 @@ from flask_login import LoginManager
 from flask_socketio import SocketIO
 from apscheduler.schedulers.background import BackgroundScheduler
 from app.services.job_fetcher import fetch_job_listings
+import pytz
 
 cached_jobs = []
 
@@ -17,7 +18,7 @@ def refresh_job_data():
     socketio.emit('update_jobs', cached_jobs)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(refresh_job_data, 'interval', minutes=2)
+scheduler.add_job(refresh_job_data, 'interval', minutes= 1, timezone=pytz.timezone('America/New_York'))
 print(scheduler)
 scheduler.start()
 
@@ -36,6 +37,5 @@ migrate = Migrate(app, db, render_as_batch=True)
 @app.before_first_request
 def create_table():
     db.create_all()
-
 
 from app import routes, models
