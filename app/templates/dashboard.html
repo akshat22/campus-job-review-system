@@ -26,7 +26,7 @@
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
 <script>
     // Initialize SocketIO connection
-    const socket = io.connect('http://127.0.0.1:5000');  // Replace with your server's address if needed
+    const socket = io.connect('http://localhost:5001');
 
     let currentPage = 1;
     const jobsPerPage = 5; // Change this number based on how many jobs you want to display per page
@@ -35,7 +35,7 @@
     // Function to render jobs on the current page
     function renderJobs() {
         const jobListingsContainer = document.getElementById('job-listings');
-        jobListingsContainer.innerHTML = '';  // Clear previous listings
+        jobListingsContainer.innerHTML = '';
 
         const start = (currentPage - 1) * jobsPerPage;
         const end = start + jobsPerPage;
