@@ -22,8 +22,9 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip && pip install -r requirements.txt
           python -m pip install --upgrade pip
-          pip install flask pytest coverage
+          pip install pytest coverage
 
       - name: Run tests with coverage
         run: coverage run -m pytest tests/
