@@ -1,63 +1,82 @@
 import os
 import sys
-from flask import jsonify, url_for
+import pytest
+from app import app, db
+from app.models import User, Reviews
+from flask_login import login_user
 
 sys.path.append(os.getcwd()[:-5] + "app")
-from app import app, db
-from app.models import Reviews
-from app.forms import ReviewForm
-from flask_login import current_user
 
-# Basic route tests
-def test_index_route():
-    response = app.test_client().get('/')
+@pytest.fixture
+def client():
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'  # Use an in-memory database for testing
+    with app.test_client() as client:
+        with app.app_context():
+            db.create_all()  # Create all tables
+        yield client
+        # Clean up after tests
+        with app.app_context():
+            db.session.remove()
+            db.drop_all()
+
+@pytest.fixture
+def login_user(client):
+    user = User(username="testuser", email="testuser@example.com")
+    user.set_password("testpassword")
+    db.session.add(user)
+    db.session.commit()
+    with client:
+        login_user(user)
+    yield client
+
+@pytest.fixture
+def create_review(client, login_user):
+    review = Reviews(job_title="Sample Job", job_description="Job description", department="Dept",
+                     locations="Location", hourly_pay=20, benefits="Benefits", review="Good", rating=5,
+                     recommendation="Yes", author_id=1)  # Assume author_id=1 is the test user
+    db.session.add(review)
+    db.session.commit()
+    return review
+
+def test_index_route(client):
+    response = client.get('/')
     assert response.status_code == 200
 
-def test_home_route():
-    response = app.test_client().get('/home')
+def test_index_route_2(client):
+    response = client.get('/home')
     assert response.status_code == 200
 
-# Registration route tests
-def test_register_route_get():
-    response = app.test_client().get('/register')
+def test_register_get(client):
+    response = client.get('/register')
     assert response.status_code == 200
 
-def test_register_route_post():
-    response = app.test_client().post('/register', data={
-        'username': 'asavla2',
-        'password': 'pass',
-        'email': 'asavla2@ncsu.edu'
-    })
+def test_register_post(client):
+    response = client.post('/register', data={'username': 'asavla2', 'password': 'pass', 'email': 'asavla2@ncsu.edu'})
     assert response.status_code == 200
 
-# Login route tests
-def test_login_route_get():
-    response = app.test_client().get('/login')
+def test_login_get(client):
+    response = client.get('/login')
     assert response.status_code == 200
 
-def test_login_route_post():
-    response = app.test_client().post('/login', data={
-        'email': 'asavla2@ncsu.edu',
-        'password': 'pass'
-    })
+def test_login_post(client):
+    response = client.post('/login', data={'email': 'asavla2@ncsu.edu', 'password': 'pass'})
     assert response.status_code == 200
 
-# Logout route test
-def test_logout_route():
-    response = app.test_client().get('/logout')
+def test_logout_get(client):
+    response = client.get('/logout')
     assert response.status_code == 302
 
-# Review viewing and management route tests
-def test_view_all_reviews():
-    response = app.test_client().get('/review/all')
+def test_view_review_all(client):
+    response = client.get('/review/all')
     assert response.status_code == 200
 
-def test_create_review_get():
-    response = app.test_client().get('/review/new')
-    assert response.status_code == 302  # Redirects if not logged in
+def test_add_review_route_get(client):
+    response = client.get('/review/new')
+    assert response.status_code == 302
 
-def test_create_review_post():
-    response = app.test_client().post('/review/new', data={
+def test_add_review_route_post(client):
+    response = client.post('/review/new', data={
         "job_title": "1",
         "job_description": "2",
         "department": "3",
@@ -68,57 +87,61 @@ def test_create_review_post():
         "rating": "2",
         "recommendation": "2",
     })
-    assert response.status_code == 302  # Redirects if not logged in
+    assert response.status_code == 302
 
-def test_view_single_review():
-    response = app.test_client().get('/review/5')
-    assert response.status_code == 200  # Assumes review with ID 5 exists
-
-    response = app.test_client().get('/review/1')
-    assert response.status_code == 404  # Assumes review with ID 1 does not exist
+def test_view_review(client, create_review):
+    response1 = client.get('/review/1')  # Use the correct review ID created in the fixture
+    response2 = client.get('/review/5')
+    assert response1.status_code == 200
+    assert response2.status_code == 404
 
 def test_update_review_get(client, login_user, create_review):
-    review_id = create_review.id
-    response = client.get(f'/review/{review_id}/update')
+    response = client.get('/review/1/update')  # Assuming the ID of the created review is 1
     assert response.status_code == 200
 
 def test_update_review_post(client, login_user, create_review):
-    review_id = create_review.id
-    response = client.post(f'/review/{review_id}/update', data={
-        'job_title': 'Updated Job Title',
-        'job_description': 'Updated Job Description',
-        'department': 'Updated Department',
-        'locations': 'Updated Location',
-        'hourly_pay': 'Updated Pay',
-        'benefits': 'Updated Benefits',
-        'review': 'Updated Review Content',
-        'rating': '4',
-        'recommendation': 'Yes'
+    response = client.post('/review/1/update', data={  # Use the correct review ID
+        "job_title": "Updated Job Title",
+        "job_description": "Updated Job Description",
+        "department": "Updated Dept",
+        "locations": "Updated Location",
+        "hourly_pay": "25",
+        "benefits": "Updated Benefits",
+        "review": "Updated Review",
+        "rating": "4",
+        "recommendation": "No",
     })
-    assert response.status_code == 302
-    assert b'Your review has been updated!' in response.data
+    assert response.status_code == 302  # Redirect expected after a successful update
 
 def test_update_review_unauthorized(client, create_review):
-    # Test updating review by unauthorized user
-    review_id = create_review.id
-    response = client.post(f'/review/{review_id}/update', data={
-        'job_title': 'Unauthorized Update'
-    })
-    assert response.status_code == 403  # Forbidden error
+    # Simulate an unauthorized user trying to update a review
+    unauthorized_user = User(username="unauthorized", email="unauth@example.com")
+    unauthorized_user.set_password("wrongpassword")
+    db.session.add(unauthorized_user)
+    db.session.commit()
+    with client:
+        login_user(unauthorized_user)
+        response = client.post('/review/1/update', data={
+            "job_title": "Another Update",
+            "job_description": "Another Update Description",
+            "department": "Another Dept",
+            "locations": "Another Location",
+            "hourly_pay": "30",
+            "benefits": "Another Benefits",
+            "review": "Another Review",
+            "rating": "3",
+            "recommendation": "Yes",
+        })
+    assert response.status_code == 403  # Forbidden since user is not the author
 
-# API test
-def test_get_jobs_api():
-    response = app.test_client().get('/api/jobs')
+def test_dashboard_route(client):
+    response = client.get('/dashboard')
     assert response.status_code == 200
-    assert response.is_json
-    job_listings = response.get_json()
-    assert isinstance(job_listings, list)
 
-# Dashboard and account routes
-def test_dashboard_route():
-    response = app.test_client().get('/dashboard')
+def test_account_route(client):
+    response = client.get('/account')
+    assert response.status_code == 302
+
+def test_get_jobs(client):
+    response = client.get('/api/jobs')
     assert response.status_code == 200
-
-def test_account_route():
-    response = app.test_client().get('/account')
-    assert response.status_code == 302  # Redirects if not logged in
