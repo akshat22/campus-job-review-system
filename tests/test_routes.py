@@ -14,6 +14,43 @@ def client():
             yield client
             db.drop_all()
 
+import pytest
+from your_app.models import Reviews, User  # Adjust the import according to your app structure
+from your_app import db
+
+@pytest.fixture
+def create_reviews(client, login_user):
+    """Fixture to create multiple reviews for testing."""
+    # Create a user for reviews
+    user = User(username="testuser", email="test@example.com")
+    db.session.add(user)
+    db.session.commit()
+
+    # Create sample reviews
+    for i in range(10):
+        review = Reviews(
+            job_title=f"Software Engineer {i}",
+            job_description="Description for Software Engineer.",
+            department="Engineering",
+            locations="New York",
+            hourly_pay="30",
+            benefits="Health insurance",
+            review="This is a sample review.",
+            rating=4,
+            recommendation="Yes",
+            author=user  # Set the author to the created user
+        )
+        db.session.add(review)
+
+    db.session.commit()  # Commit all the reviews to the database
+
+    yield  # This allows the test to run after setting up
+
+    # Optionally clear the reviews after tests
+    Reviews.query.delete()
+    db.session.commit()
+
+
 @pytest.fixture
 def login_user(client):
     user = User(username="testuser", email="testuser@example.com", password="testpassword")
