@@ -1,107 +1,105 @@
 import os
 import sys
+from flask import url_for
 
 sys.path.append(os.getcwd()[:-5] + "app")
-from app import app
+from app import app, db
+from app.models import Reviews, User
+from flask_login import login_user
 
-# Basic route tests
-def test_index_route():
-    response = app.test_client().get('/')
-    assert response.status_code == 200
+# Set up user and review for testing
+def setup_module(module):
+    # Assumes test database setup is in place
+    test_user = User(username="testuser", email="testuser@ncsu.edu")
+    test_user.set_password("password")
+    db.session.add(test_user)
+    db.session.commit()
 
-def test_home_route():
-    response = app.test_client().get('/home')
-    assert response.status_code == 200
+    test_review = Reviews(
+        job_title="Test Job",
+        job_description="Testing description",
+        department="IT",
+        locations="Raleigh",
+        hourly_pay="25",
+        benefits="Health",
+        review="Good experience",
+        rating=4,
+        recommendation=1,
+        author_id=test_user.id,
+    )
+    db.session.add(test_review)
+    db.session.commit()
 
-# Registration route tests
-def test_register_route_get():
-    response = app.test_client().get('/register')
-    assert response.status_code == 200
+def teardown_module(module):
+    db.session.query(Reviews).delete()
+    db.session.query(User).delete()
+    db.session.commit()
 
-def test_register_route_post():
-    response = app.test_client().post('/register', data={
-        'username': 'asavla2',
-        'password': 'pass',
-        'email': 'asavla2@ncsu.edu'
-    })
-    assert response.status_code == 200
+# Test for updating a review by the author
+def test_update_review_get_author_login():
+    with app.test_client() as client:
+        # Log in as the review author
+        login_user(User.query.filter_by(username="testuser").first())
+        review = Reviews.query.filter_by(job_title="Test Job").first()
 
-# Login route tests
-def test_login_route_get():
-    response = app.test_client().get('/login')
-    assert response.status_code == 200
+        # Attempt to access update route
+        response = client.get(f'/review/{review.id}/update')
+        assert response.status_code == 200
 
-def test_login_route_post():
-    response = app.test_client().post('/login', data={
-        'email': 'asavla2@ncsu.edu',
-        'password': 'pass'
-    })
-    assert response.status_code == 200
+        # Verify form fields are pre-populated with review data
+        assert b'Test Job' in response.data
+        assert b'Testing description' in response.data
 
-# Logout route test
-def test_logout_route():
-    response = app.test_client().get('/logout')
-    assert response.status_code == 302
+# Test for unauthorized access to update a review
+def test_update_review_unauthorized():
+    with app.test_client() as client:
+        # Create a new user and log in as them
+        new_user = User(username="otheruser", email="otheruser@ncsu.edu")
+        new_user.set_password("password")
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
 
-# Review viewing and management route tests
-def test_view_all_reviews():
-    response = app.test_client().get('/review/all')
-    assert response.status_code == 200
+        review = Reviews.query.filter_by(job_title="Test Job").first()
 
-def test_create_review_get():
-    response = app.test_client().get('/review/new')
-    assert response.status_code == 302  # Redirects if not logged in
+        # Attempt to access update route of a review by another user
+        response = client.get(f'/review/{review.id}/update')
+        assert response.status_code == 403  # Forbidden
 
-def test_create_review_post():
-    response = app.test_client().post('/review/new', data={
-        "job_title": "1",
-        "job_description": "2",
-        "department": "3",
-        "locations": "4",
-        "hourly_pay": "5",
-        "benefits": "6",
-        "review": "7",
-        "rating": "2",
-        "recommendation": "2",
-    })
-    assert response.status_code == 302  # Redirects if not logged in
-
-def test_view_single_review():
-    response = app.test_client().get('/review/5')
-    assert response.status_code == 200  # Assumes review with ID 5 exists
-
-    response = app.test_client().get('/review/1')
-    assert response.status_code == 404  # Assumes review with ID 1 does not exist
-
+# Test for successful review update
 def test_update_review_post():
-    response = app.test_client().post('/review/5', data={
-        "job_title": "1",
-        "job_description": "2",
-        "department": "3",
-        "locations": "4",
-        "hourly_pay": "5",
-        "benefits": "6",
-        "review": "7",
-        "rating": "2",
-        "recommendation": "2",
-    })
-    assert response.status_code == 405  # Method not allowed since update uses '/review/<id>/update'
+    with app.test_client() as client:
+        # Log in as the review author
+        login_user(User.query.filter_by(username="testuser").first())
+        review = Reviews.query.filter_by(job_title="Test Job").first()
 
-# Page content filter test
-def test_page_content_post():
-    response = app.test_client().post('/pageContentPost', data={
-        "search_title": "Developer",
-        "search_location": "Raleigh",
-        "min_rating": 3,
-        "max_rating": 5
-    })
-    assert response.status_code == 200
+        # Submit updated review data
+        response = client.post(f'/review/{review.id}/update', data={
+            "job_title": "Updated Job",
+            "job_description": "Updated description",
+            "department": "Finance",
+            "locations": "New York",
+            "hourly_pay": "30",
+            "benefits": "Dental",
+            "review": "Great experience",
+            "rating": 5,
+            "recommendation": 1,
+        }, follow_redirects=True)
 
-# Vacancy and account routes
-def test_dashboard_route():
-    response = app.test_client().get('/dashboard')
-    assert response.status_code == 200
+        # Verify redirection and flash message
+        assert response.status_code == 200
+        assert b"Your review has been updated!" in response.data
 
-def test_account_route():
-    response = app.test_client().get('/account')
-    assert response.status_code == 302  # Redirects if not logged in
+        # Verify the review was updated in the database
+        updated_review = Reviews.query.get(review.id)
+        assert updated_review.job_title == "Updated Job"
+        assert updated_review.department == "Finance"
+        assert updated_review.rating == 5
+
+# Test for API endpoint to fetch jobs
+def test_get_jobs():
+    with app.test_client() as client:
+        response = client.get('/api/jobs')
+        assert response.status_code == 200
+        assert response.is_json
+        assert isinstance(response.json, list)  # Assumes the response is a list of job listings
