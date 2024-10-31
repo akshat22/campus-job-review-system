@@ -19,7 +19,7 @@ def client():
 def create_reviews(client, login_user):
     """Fixture to create multiple reviews for testing."""
     # Create a user for reviews
-    user = User(username="testuser", email="test@example.com")
+    user = User(username="testuser1", email="test1@example.com", password="testpassword2")
     db.session.add(user)
     db.session.commit()
 
