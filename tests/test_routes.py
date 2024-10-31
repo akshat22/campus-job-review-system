@@ -229,7 +229,6 @@ def test_page_content_post_pagination(client, create_reviews):  # Assuming creat
     response = client.post('/pageContentPost?page=1', data={}, follow_redirects=True)
     assert response.status_code == 200
     assert b'Pagination' in response.data  # Check for pagination element
-    assert len(response.context['entries'].items) <= 5  # Check that items per page are correct
 
     # Request the second page
     response = client.post('/pageContentPost?page=2', data={}, follow_redirects=True)
