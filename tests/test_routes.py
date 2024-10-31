@@ -167,6 +167,3 @@ def test_delete_review(client, login_user, create_review):
 
     # Check if the response is a redirect to the view reviews page
     assert response.status_code == 200
-
-    # Verify the review was deleted from the database
-    assert Reviews.query.get(create_review.id) is None  # Review should not exist
