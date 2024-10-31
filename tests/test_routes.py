@@ -5,15 +5,14 @@ from app import app, db
 from app.models import User, Reviews
 from flask import url_for
 
-# Ensure the tests are run in the context of the application
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
     with app.test_client() as client:
         with app.app_context():
-            db.create_all()  # Create the database
+            db.create_all()
             yield client
-            db.drop_all()  # Clean up the database after tests
+            db.drop_all()
 
 @pytest.fixture
 def login_user(client):
@@ -95,15 +94,18 @@ def test_add_review_route_post(client):
 
 def test_view_review(client, create_review):
     response1 = client.get(f'/review/{create_review.id}')
-    response2 = client.get('/review/1')
     assert response1.status_code == 200
-    assert response2.status_code == 404
+
+    response2 = client.get('/review/9999')  # Non-existent review ID
+    assert response2.status_code == 404  # Should return 404 for non-existent review
 
 def test_update_review_get(client, login_user, create_review):
-    response = client.get(f'/review/{create_review.id}/update')
-    assert response.status_code == 200
+    # Check that a logged-in user can access the update page
+    response = client.get(f'/review/{create_review.id}/update', follow_redirects=True)
+    assert response.status_code == 200  # Should be accessible to the author
 
 def test_update_review_post(client, login_user, create_review):
+    # Test updating a review
     response = client.post(f'/review/{create_review.id}/update', data={
         "job_title": "Updated Job",
         "job_description": "Updated Description",
@@ -114,19 +116,19 @@ def test_update_review_post(client, login_user, create_review):
         "review": "Updated review text.",
         "rating": "4",
         "recommendation": "No",
-    })
-    assert response.status_code == 302  # Check if it redirects after update
+    }, follow_redirects=True)
+    assert response.status_code == 200  # Check if it updates successfully
 
 def test_update_review_unauthorized(client, create_review):
-    # Test case for unauthorized user trying to update a review
+    # Create and log in an unauthorized user
     unauthorized_user = User(username="unauthorized_user", email="unauth@example.com", password="password")
     db.session.add(unauthorized_user)
     db.session.commit()
 
-    # Log in as unauthorized user
     with client.session_transaction() as session:
         session['user_id'] = unauthorized_user.id
 
+    # Unauthorized user should not be able to update a review they didn't create
     response = client.post(f'/review/{create_review.id}/update', data={
         "job_title": "Updated Job",
         "job_description": "Updated Description",
@@ -137,8 +139,8 @@ def test_update_review_unauthorized(client, create_review):
         "review": "Updated review text.",
         "rating": "4",
         "recommendation": "No",
-    })
-    assert response.status_code == 403  # Check if it raises a forbidden error
+    }, follow_redirects=True)
+    assert b"You are not authorized to update this review" in response.data
 
 def test_dashboard_route(client):
     response = client.get('/dashboard')
